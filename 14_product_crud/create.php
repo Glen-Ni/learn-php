@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="stylesheet" href="./style/app.css">
 </head>
 <body>
-<h1>Create a Product</h1>
+<h1>Create New Product</h1>
 <?php if (count($errors) > 0): ?>
   <?php foreach ($errors as $error): ?>
     <div class="alert alert-danger" role="alert">

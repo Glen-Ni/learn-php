@@ -4,7 +4,7 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $id = $_GET['id'] ?? null;
 
-echo $id;
+//echo $id;
 
 if (!$id) {
   header('Location: index.php');
@@ -23,9 +23,9 @@ if (empty($products)) {
 
 $product = $products[0];
 
-echo '<pre>';
-var_dump($product);
-echo '</pre>';
+//echo '<pre>';
+//var_dump($product);
+//echo '</pre>';
 
 $title = $product['title'];
 $image = '';
@@ -109,6 +109,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="stylesheet" href="./style/app.css">
 </head>
 <body>
+<p>
+  <a href="index.php" type="button" class="btn btn btn-success">Back to Products</a>
+</p>
+
 <h1>Upadate Product <?php echo $title ?> </h1>
 <?php if (count($errors) > 0): ?>
   <?php foreach ($errors as $error): ?>
@@ -120,6 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php if ($product['image']): ?>
   <img src="<?php echo $product['image'] ?>" alt=" <?php echo $title ?> " width="140" height="140">
 <?php endif; ?>
+
 <form action="" method="post" enctype="multipart/form-data">
   <div class="mb-3">
     <label for="image-file" class="form-label">upload image</label>
