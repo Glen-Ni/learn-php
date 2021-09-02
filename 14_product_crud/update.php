@@ -2,12 +2,35 @@
 $pdo = new PDO('mysql:host=localhost;port=3306;dbname=products_crud', 'root', '');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$title = '';
+$id = $_GET['id'] ?? null;
+
+echo $id;
+
+if (!$id) {
+  header('Location: index.php');
+  exit;
+}
+
+$statement = $pdo->prepare('SELECT * FROM products WHERE id = :id');
+$statement->bindValue(':id', $id);
+$statement->execute();
+$products = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+if (empty($products)) {
+  header('Location: index.php');
+  exit;
+}
+
+$product = $products[0];
+
+echo '<pre>';
+var_dump($product);
+echo '</pre>';
+
+$title = $product['title'];
 $image = '';
-$description = '';
-$price = 0;
-date_default_timezone_set("Asia/Shanghai");
-$create_date = date('Y-m-d H:i:s');
+$description = $product['description'];
+$price = $product['price'];
 
 //echo $create_date;
 
@@ -39,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $description = $_POST['description'];
   $price = $_POST['price'];
   $image = $_FILES['image'] ?? null;
-  $filePath = '';
+  $filePath = $product['image'] ?? null;
 
   if ($title === '') {
     $errors[] = 'Product title is required!';
@@ -61,12 +84,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 //  move_uploaded_file();
   if (empty($errors)) {
-    $statement = $pdo->prepare("INSERT INTO products(title, image, description, price, create_date) VALUES(:title, :image, :description, :price, :create_date)");
+    $statement = $pdo->prepare("UPDATE products SET title=:title, description=:description, price=:price, image=:image where id=:id");
+    $statement->bindValue(':id', $id);
     $statement->bindValue(':title', $title);
     $statement->bindValue(':image', $filePath);
     $statement->bindValue(':description', $description);
     $statement->bindValue(':price', $price);
-    $statement->bindValue(':create_date', $create_date);
     $statement->execute();
 
     header('Location: index.php');
@@ -86,13 +109,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="stylesheet" href="./style/app.css">
 </head>
 <body>
-<h1>Create a Product</h1>
+<h1>Upadate Product <?php echo $title ?> </h1>
 <?php if (count($errors) > 0): ?>
   <?php foreach ($errors as $error): ?>
     <div class="alert alert-danger" role="alert">
       <div><?php echo $error ?></div>
     </div>
   <?php endforeach; ?>
+<?php endif; ?>
+<?php if ($product['image']): ?>
+  <img src="<?php echo $product['image'] ?>" alt=" <?php echo $title ?> " width="140" height="140">
 <?php endif; ?>
 <form action="" method="post" enctype="multipart/form-data">
   <div class="mb-3">
