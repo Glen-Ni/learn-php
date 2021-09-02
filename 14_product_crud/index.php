@@ -14,9 +14,9 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
   <html lang="en">
   <head>
     <meta charset="UTF-8">
-  <title>Products</title>
-  <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="./style/app.css">
+    <title>Products</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./style/app.css">
   <body>
   <div class="wrapper">
     <h1>Products CRUD</h1>
@@ -27,34 +27,44 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
       <thead>
       <tr>
         <th scope="col">#</th>
+        <th scope="col">Product Picture</th>
         <th scope="col">Product Name</th>
         <th scope="col">Description</th>
-        <th scope="col">Create at</th>
+        <th scope="col">Create At</th>
         <th scope="col">Price</th>
         <th scope="col">Action</th>
       </tr>
       </thead>
       <tbody>
       <?php
-      foreach ($products as $index => $value) {
-          echo '<tr>
-                <th scope="row">' . ($index + 1) . '</th>
-                <td>' . ($value['title']) . '</td>
-                <td>' . ($value['description']) . '</td>
-                <td>' . ($value['create_date']) . '</td>
-                <td>' . ($value['price']) . '</td>
-                <td>
-                  <button type="button" class="btn btn-sm btn-primary">Edit</button>
-                  <button type="button" class="btn btn-sm btn-danger">Delete</button>
-                </td>
-              </tr>';
-      }
-      ?>
+      foreach ($products as $index => $value): ?>
+        <tr>
+          <th scope="row"> <?php echo $index + 1 ?></th>
+          <td>
+            <?php
+            if ($value['image']) {
+              echo '<img src="' . $value['image'] . '" alt="' . $value['title'] . '" width="60px" height="60px">';
+            }
+            ?>
+          </td>
+          <td><?php echo $value['title']; ?></td>
+          <td><?php echo $value['description']; ?></td>
+          <td><?php echo $value['create_date']; ?></td>
+          <td><?php echo $value['price']; ?></td>
+          <td>
+            <button type="button" class="btn btn-sm btn-primary">Edit</button>
+            <form action="delete.php" method="post" style="display: inline-block">
+              <input type="hidden" value="<?php echo $value['id'] ?>" name="id">
+              <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <?php endforeach; ?>
       </tbody>
     </table>
   </div>
   </body>
-</html>
+  </html>
 <?php
 //echo '<pre>';
 //var_dump($products);

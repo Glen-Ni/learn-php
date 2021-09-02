@@ -6,12 +6,31 @@ $title = '';
 $image = '';
 $description = '';
 $price = 0;
+date_default_timezone_set("Asia/Shanghai");
 $create_date = date('Y-m-d H:i:s');
 
-//echo $_SERVER;
+//echo $create_date;
+
+//echo $_POST;
 //echo '<pre>';
-//var_dump($_SERVER);
+//var_dump($_POST);
 //echo '</pre>';
+//echo '<pre>';
+//var_dump($_FILES);
+//echo '</pre>';
+//exit;
+
+function randomStr($n)
+{
+  $str = '';
+  $characters = '1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
+  for ($i = 0; $i < $n; $i++) {
+    $num = rand(0, strlen($characters) - 1);
+    $str .= $characters[$num];
+  }
+  return $str;
+}
+
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -19,6 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $title = $_POST['title'];
   $description = $_POST['description'];
   $price = $_POST['price'];
+  $image = $_FILES['image'] ?? null;
+  $filePath = '';
 
   if ($title === '') {
     $errors[] = 'Product title is required!';
@@ -28,17 +49,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors[] = 'Product price is required!';
   }
 
-  if (count($errors) === 0) {
+  if (!is_dir('uploaded_files')) {
+    mkdir('uploaded_files');
+  }
+
+  if ($image && $image['tmp_name']) {
+    $filePath = 'uploaded_files/' . randomStr(10) . '/' . $image['name'];
+    mkdir(dirname($filePath));
+    move_uploaded_file($image['tmp_name'], $filePath);
+  }
+
+//  move_uploaded_file();
+  if (empty($errors)) {
 
     echo 'ruaaaa';
     $statement = $pdo->prepare("INSERT INTO products(title, image, description, price, create_date) VALUES(:title, :image, :description, :price, :create_date)");
 
     $statement->bindValue(':title', $title);
-    $statement->bindValue(':image', $image);
+    $statement->bindValue(':image', $filePath);
     $statement->bindValue(':description', $description);
     $statement->bindValue(':price', $price);
     $statement->bindValue(':create_date', $create_date);
     $statement->execute();
+
+//    header('Location: index.php');
   }
 //$products = $statement->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -63,23 +97,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   <?php endforeach; ?>
 <?php endif; ?>
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
   <div class="mb-3">
     <label for="image-file" class="form-label" name="image">upload image</label>
     <br>
-    <input type="file" id="image-file">
+    <input type="file" id="image-file" name="image">
   </div>
   <div class="mb-3">
     <label for="title" class="form-label">title</label>
-    <input type="text" class="form-control" id="title" name="title">
+    <input type="text" class="form-control" id="title" name="title" value="<?php echo $title ?>">
   </div>
+
   <div class="mb-3">
     <label for="description" class="form-label">description</label>
-    <input type="text" class="form-control" id="description" name="description">
+    <input type="text" class="form-control" id="description" name="description" value="<?php echo $description ?>">
   </div>
   <div class="mb-3">
     <label for="price" class="form-label">price</label>
-    <input type="number" step="0.01" class="form-control" id="price" name="price">
+    <input type="number" step="0.01" class="form-control" id="price" name="price" value="<?php echo $price ?>">
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
