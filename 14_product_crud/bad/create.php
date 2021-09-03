@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Add Product</title>
   <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="./style/app.css">
+  <link rel="stylesheet" href="stylepp.css">
 </head>
 <body>
 <h1>Create New Product</h1>

@@ -25,7 +25,7 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <title>Products</title>
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./style/app.css">
+    <link rel="stylesheet" href="stylepp.css">
   <body>
   <div class="wrapper">
     <h1>Products CRUD</h1>
