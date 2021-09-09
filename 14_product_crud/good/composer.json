@@ -1,0 +1,16 @@
+{
+    "name": "njl/crud-mvc-version",
+    "description": "composer/mvc/",
+    "autoload": {
+        "psr-4": {
+            "myApp\\": "./"
+        }
+    },
+    "authors": [
+        {
+            "name": "小僵尸RUA",
+            "email": "nijialun888@hotmail.com"
+        }
+    ],
+    "require": {}
+}
